@@ -15,14 +15,14 @@ const middleware = async (req, res, next) => {
     }
     const decoded = jwt.verify(token, "sahil@290500");
     if (!decoded) {
-      return res.status(403).json({
+      return res.status(401).json({
         success: false,
         message: "Invalid token, authorization denied",
       });
     }
     const user = await User.findById({ _id: decoded.id });
     if (!user) {
-      return res.status(403).json({
+      return res.status(404).json({
         success: false,
         message: "User not found, authorization denied",
       });
@@ -33,7 +33,7 @@ const middleware = async (req, res, next) => {
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "Token not found ,please login" });
+      .json({ success: false, message: "please login" });
   }
 };
 

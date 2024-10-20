@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const NoteModal = ({ closeModal, addNote, currentNote }) => {
+const NoteModal = ({ closeModal, addNote, currentNote, editNote }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   useEffect(()=>{
@@ -12,10 +12,14 @@ const NoteModal = ({ closeModal, addNote, currentNote }) => {
       setDescription("");
     }
   },[currentNote])
-  const handleSubmit = async (e) => {
-    // console.log("New note added:", { title, description });
+  const handleSubmit = async (e) => { 
     e.preventDefault();
-    addNote(title, description);
+    if(currentNote){
+      editNote(currentNote._id, title, description);
+      closeModal();
+    }else{
+      addNote(title, description);
+    }
   }; 
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center  ">

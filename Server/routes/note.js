@@ -26,9 +26,9 @@ router.post("/add",middleware,  async (req, res) => {
     }
 });
 
-router.get("/", async (req, res) => {
+router.get("/",middleware, async (req, res) => {
     try {
-      const notes = await Note.find();
+      const notes = await Note.find({userId: req.user.id});
       res.status(200).json({ success: true, notes });
     } catch (error) {
       console.log(error);
@@ -37,5 +37,30 @@ router.get("/", async (req, res) => {
        .json({ success: false, message: "Server Error in retrieving notes" });
     }
 });
+router.put("/:id", async (req, res) => {
+    try {
+       const {id} = req.params;
+       const updateNote = await Note.findByIdAndUpdate(id, req.body);
+       return res.status(200).json({success: true, updateNote})
+    } catch (error) {
+      console.log(error);
+      res
+       .status(500)
+       .json({ success: false, message: "Server Error in updating notes" });
+    }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Note.findByIdAndDelete(id);
+    res.status(200).json({ success: true, message: "Note deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res
+     .status(500)
+     .json({ success: false, message: "Server Error in deleting note" });
+  }
+})
 
 export default router;
